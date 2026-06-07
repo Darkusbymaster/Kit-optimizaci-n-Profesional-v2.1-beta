@@ -1,0 +1,19 @@
+# Respaldos y configuración
+Backup_Config_Original/
+*.pow
+*.bcd
+*.log
+*.reg
+
+# Archivos de sistema
+*.tmp
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+*.txt
+
+# Archivos de IDE
+.vscode/
+*.code-workspace
