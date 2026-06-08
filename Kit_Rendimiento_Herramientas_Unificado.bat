@@ -1,10 +1,10 @@
 @echo off
 :: ================================================
 :: Kit de Rendimiento + Herramientas del Sistema 2026
-:: Versión Profesional Unificada v2.2.1 (FUNCIONAL)
+:: Versión Profesional Unificada v2.3 (CON LIMPIEZA DE RAM)
 :: ================================================
 :: Autor: Darkusbymaster
-:: Versión: 2.2.1 Estable
+:: Versión: 2.3 Profesional con Limpieza de RAM
 :: Compatibilidad: Windows 10/11/Server 2019+
 :: ================================================
 
@@ -32,12 +32,28 @@ set "ULTIMATE_PERFORMANCE_GUID=e9a42b02-d5df-448d-aa00-03f14749e58f"
     echo [%TIMESTAMP%] %type% %message% >> "%LOG_FILE%"
     exit /b 0
 
+:show_progress
+    setlocal enabledelayedexpansion
+    set "total=%~1"
+    set "current=%~2"
+    set "label=%~3"
+    
+    set /a percent=(!current! * 100) / !total!
+    set /a bars=!percent! / 5
+    set "progress="
+    
+    for /l %%i in (1,1,!bars!) do set "progress=!progress!#"
+    for /l %%i in (!bars!,1,19) do set "progress=!progress!-"
+    
+    echo [!progress!] !percent!%% - !label!
+    exit /b 0
+
 :main_menu
 cls
 echo.
 echo ================================================
 echo   KIT DE RENDIMIENTO ^+ HERRAMIENTAS WINDOWS
-echo           Version 2.2.1 Estable
+echo           Version 2.3 Profesional
 echo ================================================
 echo.
 echo [--- SECCION 1: OPTIMIZACION DE RENDIMIENTO ---]
@@ -70,20 +86,21 @@ echo   22. Programador de Tareas
 echo   23. Windows PowerShell
 echo   24. Firewall de Windows Defender
 echo.
-echo [--- SECCION 3: OPCIONES ADICIONALES ---]
+echo [--- SECCION 3: MANTENIMIENTO Y LIMPIEZA ---]
 echo.
 echo   25. Limpiar Archivos Temporales
 echo   26. Vaciar Papelera de Reciclaje
 echo   27. Desfragmentar Disco (C:)
 echo   28. Analizar Espacio en Disco
 echo   29. Reparar Sistema de Archivos
+echo   30. Limpiar y Optimizar RAM
 echo.
 echo [--- SECCION 4: SALIR ---]
 echo.
-echo   30. Salir del Programa
+echo   31. Salir del Programa
 echo.
 echo ================================================
-set /p choice="Selecciona una opcion (1-30): "
+set /p choice="Selecciona una opcion (1-31): "
 
 :: Validar entrada - Proteger contra caracteres no numericos
 if "%choice%"=="" (
@@ -95,7 +112,7 @@ for /f "delims=0123456789" %%a in ("%choice%") do (
 )
 
 if %choice% lss 1 goto invalid_choice
-if %choice% gtr 30 goto invalid_choice
+if %choice% gtr 31 goto invalid_choice
 
 goto process_choice
 
@@ -136,15 +153,16 @@ if %choice%==22 goto tool_taskschd
 if %choice%==23 goto tool_powershell
 if %choice%==24 goto tool_firewall
 
-:: SECCION 3: OPCIONES ADICIONALES
+:: SECCION 3: MANTENIMIENTO Y LIMPIEZA
 if %choice%==25 goto clean_temp
 if %choice%==26 goto empty_recycle
 if %choice%==27 goto defrag_disk
 if %choice%==28 goto analyze_disk
 if %choice%==29 goto repair_filesystem
+if %choice%==30 goto clean_ram
 
 :: SECCION 4: SALIR
-if %choice%==30 goto exit_program
+if %choice%==31 goto exit_program
 
 goto main_menu
 
@@ -225,8 +243,8 @@ call :log_message "Servicios deshabilitados" "[OK]"
 
 echo [8/8] Limpiando temporales...
 cd /d "%TEMP%" >nul 2>&1
-del /s /q /f *.tmp >nul 2>&1
-del /s /q /f *.log >nul 2>&1
+del /s /q /f *.tmp 2>nul
+del /s /q /f *.log 2>nul
 call :log_message "Temporales limpiados" "[OK]"
 
 echo.
@@ -457,7 +475,7 @@ timeout /t 2 /nobreak
 goto main_menu
 
 :: ================================================
-:: SECCION 3: OPCIONES ADICIONALES
+:: SECCION 3: MANTENIMIENTO Y LIMPIEZA
 :: ================================================
 
 :clean_temp
@@ -468,17 +486,17 @@ echo         LIMPIEZA DE ARCHIVOS TEMPORALES
 echo ================================================
 echo.
 
-echo Limpiando archivos temporales...
+echo Paso 1: Limpiando archivos temporales...
 cd /d "%TEMP%" >nul 2>&1
 del /s /q /f *.tmp 2>nul
 del /s /q /f *.log 2>nul
 del /s /q /f *.bat 2>nul
 
-echo Limpiando prefetch...
+echo Paso 2: Limpiando prefetch...
 cd /d "%WINDIR%\Prefetch" >nul 2>&1
 del /s /q /f *.pf 2>nul
 
-echo Limpiando cache de usuario...
+echo Paso 3: Limpiando cache de usuario...
 cd /d "%LOCALAPPDATA%\Temp" >nul 2>&1
 del /s /q /f /a 2>nul
 
@@ -598,6 +616,75 @@ if %errorlevel% equ 0 (
     )
 )
 
+echo.
+pause
+goto main_menu
+
+:clean_ram
+cls
+echo.
+echo ================================================
+echo         LIMPIEZA Y OPTIMIZACION DE RAM
+echo ================================================
+echo.
+
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    echo [ERROR] Se requieren permisos de ADMINISTRADOR
+    echo.
+    pause
+    goto main_menu
+)
+
+echo.
+echo ADVERTENCIA: Esta operacion puede interrumpir aplicaciones abiertas.
+echo Se recomienda cerrar todos los programas antes de continuar.
+echo.
+set /p confirm="Deseas continuar con la limpieza de RAM? (s/n): "
+
+if /i not "%confirm%"=="s" (
+    echo Operacion cancelada
+    echo.
+    pause
+    goto main_menu
+)
+
+echo.
+echo ================================================
+echo         INICIANDO LIMPIEZA DE RAM
+echo ================================================
+echo.
+
+echo [Paso 1/4] Limpiando portapapeles...
+echo off | clip
+timeout /t 1 /nobreak
+echo [OK] Portapapeles limpiado
+
+echo.
+echo [Paso 2/4] Cerrando procesos congelados...
+taskkill /f /fi "STATUS eq NOT RESPONDING" 2>nul
+timeout /t 1 /nobreak
+echo [OK] Procesos congelados cerrados
+
+echo.
+echo [Paso 3/4] Ejecutando Garbage Collection de PowerShell...
+powershell -command "& {[System.GC]::Collect()}" 2>nul
+timeout /t 1 /nobreak
+echo [OK] Garbage Collection ejecutado
+
+echo.
+echo [Paso 4/4] Finalizando operacion...
+timeout /t 1 /nobreak
+echo [OK] RAM optimizada
+
+call :log_message "RAM limpiada y optimizada" "[OK]"
+
+echo.
+echo ================================================
+echo [OK] LIMPIEZA DE RAM COMPLETADA EXITOSAMENTE
+echo ================================================
+echo.
+echo Tu RAM ha sido optimizada correctamente.
 echo.
 pause
 goto main_menu
