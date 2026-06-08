@@ -1,10 +1,10 @@
 @echo off
 :: ================================================
 :: Kit de Rendimiento + Herramientas del Sistema 2026
-:: Versión Profesional Unificada
+:: Versión Profesional Unificada v2.2.1 (FUNCIONAL)
 :: ================================================
 :: Autor: Darkusbymaster
-:: Versión: 2.2 Profesional
+:: Versión: 2.2.1 Estable
 :: Compatibilidad: Windows 10/11/Server 2019+
 :: ================================================
 
@@ -37,7 +37,7 @@ cls
 echo.
 echo ================================================
 echo   KIT DE RENDIMIENTO ^+ HERRAMIENTAS WINDOWS
-echo           Version 2.2 Profesional
+echo           Version 2.2.1 Estable
 echo ================================================
 echo.
 echo [--- SECCION 1: OPTIMIZACION DE RENDIMIENTO ---]
@@ -49,22 +49,22 @@ echo.
 echo [--- SECCION 2: HERRAMIENTAS DEL SISTEMA ---]
 echo.
 echo   4.  Mapa de Caracteres
-echo   5.  Símbolo del Sistema (CMD)
+echo   5.  Simbolo del Sistema (CMD)
 echo   6.  Servicios de Componentes
-echo   7.  Administración de Equipos
+echo   7.  Administracion de Equipos
 echo   8.  Panel de Control
 echo   9.  Limpieza de Disco
 echo   10. Visor de Eventos
-echo   11. Política de Seguridad Local
+echo   11. Politica de Seguridad Local
 echo   12. Monitor de Rendimiento
-echo   13. Gestión de Impresoras
+echo   13. Gestion de Impresoras
 echo   14. Editor del Registro
 echo   15. Monitor de Recursos
 echo   16. Cuadro Ejecutar
 echo   17. Servicios
 echo   18. Grabador de Pasos
 echo   19. Configuracion del Sistema
-echo   20. Información del Sistema
+echo   20. Informacion del Sistema
 echo   21. Administrador de Tareas
 echo   22. Programador de Tareas
 echo   23. Windows PowerShell
@@ -85,8 +85,15 @@ echo.
 echo ================================================
 set /p choice="Selecciona una opcion (1-30): "
 
-:: Validar entrada
-if "%choice%"=="" goto invalid_choice
+:: Validar entrada - Proteger contra caracteres no numericos
+if "%choice%"=="" (
+    goto invalid_choice
+)
+
+for /f "delims=0123456789" %%a in ("%choice%") do (
+    if not "%%a"=="" goto invalid_choice
+)
+
 if %choice% lss 1 goto invalid_choice
 if %choice% gtr 30 goto invalid_choice
 
@@ -224,15 +231,18 @@ call :log_message "Temporales limpiados" "[OK]"
 
 echo.
 echo ================================================
-echo [✓] OPTIMIZACION COMPLETADA EXITOSAMENTE
+echo [OK] OPTIMIZACION COMPLETADA EXITOSAMENTE
 echo ================================================
 echo.
 echo Se recomienda reiniciar el sistema.
 echo.
-set /p restart="¿Deseas reiniciar ahora? (s/n): "
+set /p restart="Deseas reiniciar ahora? (s/n): "
 if /i "%restart%"=="s" (
     timeout /t 10 /nobreak
     shutdown /r /t 0 /c "Optimizaciones de rendimiento aplicadas"
+) else (
+    echo Operacion completada. Volviendo al menu...
+    timeout /t 3 /nobreak
 )
 
 goto main_menu
@@ -263,22 +273,31 @@ if %errorLevel% neq 0 (
 echo Restaurando BCD...
 if exist "%BACKUP_DIR%\bcd_backup.bcd" (
     bcdedit /import "%BACKUP_DIR%\bcd_backup.bcd" >nul 2>&1
+    echo [OK] BCD restaurado
+) else (
+    echo [ADVERTENCIA] Archivo de respaldo BCD no encontrado
 )
 
+echo.
 echo Importando configuracion de servicios...
 if exist "%BACKUP_DIR%\services_backup.reg" (
     echo Por favor, haz click derecho en services_backup.reg y selecciona "Combinar"
     echo Ubicacion: %BACKUP_DIR%\services_backup.reg
     echo.
+) else (
+    echo [ADVERTENCIA] Archivo de respaldo de servicios no encontrado
 )
 
 call :log_message "Restauracion completada" "[INFO]"
 
 echo.
-set /p restart="¿Deseas reiniciar ahora? (s/n): "
+set /p restart="Deseas reiniciar ahora? (s/n): "
 if /i "%restart%"=="s" (
     timeout /t 10 /nobreak
     shutdown /r /t 0 /c "Restauracion de configuracion original"
+) else (
+    echo Operacion completada. Volviendo al menu...
+    timeout /t 3 /nobreak
 )
 
 goto main_menu
@@ -310,30 +329,37 @@ goto main_menu
 
 :tool_charmap
 start charmap
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_cmd
 start cmd
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_components
 start dcomcnfg
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_compmgmt
 start compmgmt.msc
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_control
 start control
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_cleanmgr
 start cleanmgr
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_eventvwr
 start eventvwr
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_secpol
@@ -344,14 +370,17 @@ if %errorLevel% neq 0 (
     goto main_menu
 )
 start secpol.msc
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_perfmon
 start perfmon
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_printmgmt
 start printmanagement.msc
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_regedit
@@ -362,14 +391,17 @@ if %errorLevel% neq 0 (
     goto main_menu
 )
 start regedit
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_resmon
 start resmon
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_run
 explorer shell:::{2559a1f3-21d7-11d4-bdaf-00c04f60b9f0}
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_services
@@ -380,30 +412,37 @@ if %errorLevel% neq 0 (
     goto main_menu
 )
 start services.msc
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_psr
 start psr
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_msconfig
 start msconfig
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_msinfo
 start msinfo32
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_taskmgr
 start taskmgr
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_taskschd
 start taskschd.msc
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_powershell
 start powershell
+timeout /t 2 /nobreak
 goto main_menu
 
 :tool_firewall
@@ -414,6 +453,7 @@ if %errorLevel% neq 0 (
     goto main_menu
 )
 start wf.msc
+timeout /t 2 /nobreak
 goto main_menu
 
 :: ================================================
@@ -430,20 +470,20 @@ echo.
 
 echo Limpiando archivos temporales...
 cd /d "%TEMP%" >nul 2>&1
-del /s /q /f *.tmp >nul 2>&1
-del /s /q /f *.log >nul 2>&1
-del /s /q /f *.bat >nul 2>&1
+del /s /q /f *.tmp 2>nul
+del /s /q /f *.log 2>nul
+del /s /q /f *.bat 2>nul
 
 echo Limpiando prefetch...
 cd /d "%WINDIR%\Prefetch" >nul 2>&1
-del /s /q /f *.pf >nul 2>&1
+del /s /q /f *.pf 2>nul
 
 echo Limpiando cache de usuario...
 cd /d "%LOCALAPPDATA%\Temp" >nul 2>&1
-del /s /q /f /a *.* >nul 2>&1
+del /s /q /f /a 2>nul
 
 echo.
-echo [✓] Limpieza completada
+echo [OK] Limpieza completada
 call :log_message "Archivos temporales limpiados" "[OK]"
 echo.
 pause
@@ -461,7 +501,7 @@ echo Vaciando papelera...
 rd /s /q "%systemdrive%\$Recycle.bin" >nul 2>&1
 timeout /t 2 /nobreak
 
-echo [✓] Papelera vaciada correctamente
+echo [OK] Papelera vaciada correctamente
 call :log_message "Papelera vaciada" "[OK]"
 echo.
 pause
@@ -481,8 +521,13 @@ echo.
 
 defrag C: /O >nul 2>&1
 
-echo [✓] Desfragmentacion completada
-call :log_message "Disco desfragmentado" "[OK]"
+if %errorlevel% equ 0 (
+    echo [OK] Desfragmentacion completada
+    call :log_message "Disco desfragmentado" "[OK]"
+) else (
+    echo [ADVERTENCIA] Error en desfragmentacion
+)
+
 echo.
 pause
 goto main_menu
@@ -497,7 +542,7 @@ echo.
 
 echo Unidades disponibles:
 echo.
-wmic logicaldisk get name,size,freespace /format:list
+wmic logicaldisk get name,size,freespace /format:list 2>nul
 echo.
 pause
 goto main_menu
@@ -531,16 +576,22 @@ if "%drive%"=="" (
     goto main_menu
 )
 
+echo.
 echo Reparando %drive%...
-chkdsk %drive% /f /r >nul 2>&1
+echo Esto puede tomar varios minutos...
+echo.
+
+chkdsk %drive% /F /R /X >nul 2>&1
 
 if %errorlevel% equ 0 (
-    echo [✓] Sistema de archivos reparado
+    echo [OK] Sistema de archivos reparado correctamente
     call :log_message "Sistema de archivos reparado: %drive%" "[OK]"
 ) else (
-    echo [ADVERTENCIA] Se requiere reiniciar para completar la reparacion
+    echo [INFO] Se requiere reiniciar para completar la reparacion
     echo Se programara la reparacion para el proximo arranque
-    set /p restart="¿Deseas reiniciar ahora? (s/n): "
+    call :log_message "Reparacion programada: %drive%" "[INFO]"
+    echo.
+    set /p restart="Deseas reiniciar ahora? (s/n): "
     if /i "%restart%"=="s" (
         timeout /t 10 /nobreak
         shutdown /r /t 0 /c "Reparacion de sistema de archivos"
