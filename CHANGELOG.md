@@ -2,6 +2,38 @@
 
 Todos los cambios notables en este proyecto se documentarán en este archivo.
 
+## [2.2.1] - 2026-06-08 (Estable - Correciones Críticas)
+
+### 🔧 Correcciones Importantes
+- **Validación mejorada de entrada** - Protege contra caracteres no numéricos
+- **Timeouts agregados** - Después de cada herramienta (2 segundos)
+- **Manejo seguro de errores** - Redirección correcta de stderr (2>nul)
+- **Caracteres especiales removidos** - Eliminadas tildes problemáticas en menú
+- **Cierre seguro garantizado** - Endlocal y exit /b 0 al final
+- **Flujo de menú mejorado** - Regresa correctamente al menú principal
+- **Respuesta mejorada** - Timeouts después de operaciones completadas
+
+### ✅ Funcionalidad Verificada
+- ✅ Sin fallos de cierre del programa
+- ✅ Menú vuelve correctamente después de cada operación
+- ✅ Validación robusta de opciones
+- ✅ Tratamiento de errores silencioso
+- ✅ Cierre seguro en exit_program
+
+### 📦 Cambios Técnicos
+- Agregados `timeout /t 2 /nobreak` después de cada herramienta
+- Redirección mejorada: `2>nul` en comandos problemáticos
+- Validación de entrada: Protege contra valores no numéricos
+- Mejora en el tratamiento de shutdown y restart
+- Redirección correcta de salida en WMIC y CHKDSK
+
+### 🐛 Fallos Corregidos
+- Programa no se cerraba correctamente en versión anterior
+- Menú no regresaba después de algunas herramientas
+- Caracteres especiales causaban problemas en visualización
+- Comandos provocaban errores innecesarios
+- Validación insuficiente de entrada de usuario
+
 ## [2.2] - 2026-06-08 (Beta - Nueva)
 
 ### ✨ Características Nuevas
@@ -36,22 +68,12 @@ Todos los cambios notables en este proyecto se documentarán en este archivo.
   - Análisis de Espacio en Disco
   - Reparación de Sistema de Archivos
 
-### 🐛 Correcciones
-- Mejor control de flujo del menú
-- Validación de entrada mejorada
-- Prevención de errores por opciones inválidas
-
-### 📝 Documentación
-- Script autodocumentado con comentarios claros
-- Estructura modular y fácil de mantener
-- Secciones identificadas claramente
-
 ## [2.1] - 2026-06-07 (Beta)
 
 ### ✨ Características Nuevas
 - Sistema completo de logging con timestamps
 - Funciones reutilizables para mejor mantenibilidad
-- 8 fases de optimización (vs 2-3 del original)
+- 8 fases de optimización
 - Detección inteligente de planes de energía
 - Opción interactiva de reinicio
 - Manejo robusto de errores
@@ -61,79 +83,13 @@ Todos los cambios notables en este proyecto se documentarán en este archivo.
 - Papelera de reciclaje integrada
 - Herramienta de restauración incluida
 
-### 🔧 Mejoras
-- Mejor validación de permisos administrativos
-- Mensajes de error más descriptivos
-- Respaldos más completos del sistema
-- Instrucciones de restauración más claras
-- Salida formateada y legible
-- Compatibilidad expandida (Win 10/11/Server 2019+)
-- Mejor documentación
-
-### 📦 Cambios Técnicos
-- Uso de `setlocal enabledelayedexpansion` para variables dinámicas
-- Manejo de GUIDs de planes de energía
-- Integración con WMI para detección de unidades
-- Consultas de registro mejoradas
-- Gestión de servicios más segura
-- Logging multi-nivel
-
-### 🐛 Correcciones
-- Errores potenciales en búsqueda de planes de energía
-- Restauración de BCD más robusta
-- Manejo de rutas con espacios
-- Detección de servicios no existentes
-- Mejor manejo de permisos
-
-### 📝 Documentación
-- README.md completo con ejemplos
-- CHANGELOG.md detallado
-- Comentarios en el código mejorados
-- Instrucciones de restauración paso a paso
-- Guía de solución de problemas
-- Herramienta de restauración interactiva
-
 ## [2.0] - 2026-06-07
 
-### ✨ Características Añadidas
-- Sistema completo de logging con timestamps
-- Funciones reutilizables para mejor mantenibilidad
-- 8 fases de optimización (vs 2-3 del original)
+### ✨ Características Iniciales
+- Sistema de logging con timestamps
+- 8 fases de optimización
 - Detección inteligente de planes de energía
-- Opción interactiva de reinicio
 - Manejo robusto de errores
-- Interfaz visual mejorada con colores
-- Caché TCP/IP optimizado
-- Limpieza de archivos temporales
-- Papelera de reciclaje integrada
-
-### 🔧 Mejoras
-- Mejor validación de permisos administrativos
-- Mensajes de error más descriptivos
-- Respaldos más completos del sistema
-- Instrucciones de restauración más claras
-- Salida formateada y legible
-- Compatibilidad expandida (Win 10/11/Server 2019+)
-
-### 📦 Cambios Técnicos
-- Uso de `setlocal enabledelayedexpansion` para variables dinámicas
-- Manejo de GUIDs de planes de energía
-- Integración con WMI para detección de unidades
-- Consultas de registro mejoradas
-- Gestión de servicios más segura
-
-### 🐛 Correcciones
-- Errores potenciales en búsqueda de planes de energía
-- Restauración de BCD más robusta
-- Manejo de rutas con espacios
-- Detección de servicios no existentes
-
-### 📝 Documentación
-- README.md completo con ejemplos
-- Comentarios en el código mejorados
-- Instrucciones de restauración detalladas
-- Guía de solución de problemas
-- Changelog de actualizaciones
 
 ## [1.0] - Versión Original
 
@@ -148,7 +104,7 @@ Todos los cambios notables en este proyecto se documentarán en este archivo.
 ## Roadmap Futuro
 
 ### v2.3 (Planeado)
-- [ ] Perfiles de optimización personalizables (Juegos, Trabajo, Multimedia)
+- [ ] Perfiles de optimización personalizables
 - [ ] Interfaz gráfica (GUI) mejorada
 - [ ] Escaneo de malware integrado
 - [ ] Limpieza avanzada de caché
